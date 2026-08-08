@@ -399,7 +399,22 @@
         placeholder="Descripción de la película..."
       ></textarea>
 
-      <label>Carátula</label>
+      <label>Carátula</label><label>Vídeo de tu móvil</label>
+
+<label class="file-label" for="videoInput">
+  📱 Elegir vídeo del teléfono
+</label>
+
+<input
+  id="videoInput"
+  type="file"
+  accept="video/*"
+>
+
+<p
+  id="videoName"
+  style="color:#a1a1aa;font-size:12px;margin-top:8px;"
+></p>
 
       <label class="file-label" for="posterInput">
         🖼️ Elegir carátula del teléfono
@@ -523,7 +538,7 @@
     JSON.parse(localStorage.getItem("cinelibre_favorites")) || [];
 
   let selectedPoster = "";
-
+let selectedVideo = null;
   const moviesContainer =
     document.getElementById("movies");
 
@@ -536,7 +551,11 @@
   const posterInput =
     document.getElementById("posterInput");
 
-  function allMovies() {
+  funcconst videoInput =
+    document.getElementById("videoInput");
+
+const videoName =
+    document.getElementById("videoName");tion allMovies() {
     return [...defaultMovies, ...customMovies];
   }
 
@@ -824,7 +843,26 @@
   }
 
   posterInput.addEventListener(
-    "change",
+    "change",videoInput.addEventListener("change", function () {
+
+  const file = this.files[0];
+
+  if (!file) return;
+
+  if (!file.type.startsWith("video/")) {
+
+    alert("Selecciona un archivo de vídeo.");
+
+    this.value = "";
+
+    return;
+  }
+
+  selectedVideo = file;
+
+  videoName.textContent =
+    "✅ Vídeo seleccionado: " + file.name;
+});
     function() {
 
       const file = this.files[0];
