@@ -1,0 +1,10 @@
+{
+  "name": "CineLibre",
+  "short_name": "CineLibre",
+  "description": "Reproductor privado de películas",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#09090b",
+  "orientation": "portrait"
+}
