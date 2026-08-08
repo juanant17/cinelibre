@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#09090b">
+  <meta name="description" content="CineLibre - películas y vídeos privados">
+  <title>CineLibre</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #09090b;
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(9,9,11,.96);
+      border-bottom: 1px solid #27272a;
+      padding: 16px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: bold;
+      color: #e50914;
+    }
+
+    .privacy {
+      font-size: 12px;
+      color: #86efac;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px 15px;
+      border: 1px solid #3f3f46;
+      border-radius: 10px;
+      background: #18181b;
+      color: white;
+      outline: none;
+      font-size: 15px;
+    }
+
+    input:focus {
+      border-color: #e50914;
+    }
+
+    main {
+      padding: 20px 16px 90px;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    h1 {
+      font-size: 27px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: #a1a1aa;
+      margin-bottom: 22px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      margin: 28px 0 14px;
+    }
+
+    .movies {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .movie {
+      background: #18181b;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #27272a;
+    }
+
+    .poster {
+      height: 190px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 50px;
+      background:
+        linear-gradient(135deg, #18181b, #3f3f46);
+    }
+
+    .movie-info {
+      padding: 12px;
+    }
+
+    .movie-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .movie-meta {
+      color: #a1a1aa;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .watch {
+      background: #e50914;
+      color: white;
+      width: 100%;
+    }
+
+    .favorite {
+      margin-top: 7px;
+      width: 100%;
+      background: #27272a;
+      color: white;
+    }
+
+    .favorite.active {
+      background: #7f1d1d;
+      color: #fecaca;
+    }
+
+    .empty {
+      color: #a1a1aa;
+      padding: 20px 0;
+    }
+
+    .add-box {
+      margin-top: 20px;
+      padding: 18px;
+      background: #18181b;
+      border: 1px solid #27272a;
+      border-radius: 12px;
+    }
+
+    .add-box p {
+      color: #a1a1aa;
+      font-size: 14px;
+      margin: 8px 0 15px;
+      line-height: 1.5;
+    }
+
+    .file-button {
+      display: inline-block;
+      background: #fff;
+      color: #111;
+      padding: 11px 15px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #videoInput {
+      display: none;
+    }
+
+    .my-video {
+      margin-top: 15px;
+    }
+
+    video {
+      width: 100%;
+      max-height: 420px;
+      background: black;
+      border-radius: 10px;
+    }
+
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      background: #111113;
+      border-top: 1px solid #27272a;
+      display: flex;
+      justify-content: center;
+      gap: 35px;
+      padding: 12px;
+    }
+
+    nav button {
+      background: transparent;
+      color: #a1a1aa;
+      font-size: 13px;
+    }
+
+    nav button.active {
+      color: white;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (min-width: 650px) {
+      .movies {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .poster {
+        height: 240px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="top">
+    <div class="logo">🎬 CineLibre</div>
+    <div class="privacy">🔒 Privado</div>
+  </div>
+
+  <input
+    id="search"
+    type="search"
+    placeholder="Buscar películas..."
+    autocomplete="off"
+  >
+</header>
+
+<main>
+
+  <section id="home">
+
+    <h1>Bienvenido a CineLibre</h1>
+    <p class="subtitle">
+      Películas y vídeos, de forma sencilla y privada.
+    </p>
+
+    <h2 class="section-title">Películas</h2>
+
+    <div id="movies" class="movies"></div>
+
+  </section>
+
+  <section id="favoritesSection" class="hidden">
+
+    <h2 class="section-title">❤️ Mis favoritos</h2>
+
+    <div id="favorites" class="movies"></div>
+
+  </section>
+
+  <section id="myVideosSection" class="hidden">
+
+    <h2 class="section-title">📁 Mis películas</h2>
+
+    <div class="add-box">
+      <h3>Añadir un vídeo del teléfono</h3>
+
+      <p>
+        El vídeo se reproduce directamente desde tu dispositivo.
+        No se sube a CineLibre.
+      </p>
+
+      <label class="file-button" for="videoInput">
+        ➕ Elegir vídeo
+      </label>
+
+      <input
+        id="videoInput"
+        type="file"
+        accept="video/*"
+      >
+
+      <div id="videoContainer" class="my-video"></div>
+    </div>
+
+  </section>
+
+</main>
+
+<nav>
+  <button id="homeBtn" class="active" onclick="showSection('home')">
+    🏠 Inicio
+  </button>
+
+  <button onclick="showSection('favoritesSection')">
+    ❤️ Favoritos
+  </button>
+
+  <button onclick="showSection('myVideosSection')">
+    📁 Mis vídeos
+  </button>
+</nav>
+
+<script>
+  const movies = [
+    {
+      id: 1,
+      title: "Película de ejemplo",
+      year: "2026",
+      genre: "Demo",
+      emoji: "🎬"
+    },
+    {
+      id: 2,
+      title: "Aventura",
+      year: "2026",
+      genre: "Aventura",
+      emoji: "🌄"
+    },
+    {
+      id: 3,
+      title: "Ciencia ficción",
+      year: "2026",
+      genre: "Sci-Fi",
+      emoji: "🚀"
+    },
+    {
+      id: 4,
+      title: "Documental",
+      year: "2026",
+      genre: "Documental",
+      emoji: "🌍"
+    }
+  ];
+
+  let favorites =
+    JSON.parse(localStorage.getItem("cinelibre_favorites")) || [];
+
+  const moviesContainer = document.getElementById("movies");
+  const favoritesContainer = document.getElementById("favorites");
+  const search = document.getElementById("search");
+
+  function renderMovies(list, container) {
+    container.innerHTML = "";
+
+    if (!list.length) {
+      container.innerHTML =
+        '<div class="empty">No se encontraron películas.</div>';
+      return;
+    }
+
+    list.forEach(movie => {
+      const isFavorite = favorites.includes(movie.id);
+
+      const card = document.createElement("article");
+      card.className = "movie";
+
+      card.innerHTML = `
+        <div class="poster">${movie.emoji}</div>
+
+        <div class="movie-info">
+          <div class="movie-title">${movie.title}</div>
+
+          <div class="movie-meta">
+            ${movie.year} · ${movie.genre}
+          </div>
+
+          <button class="watch"
+            onclick="playMovie(${movie.id})">
+            ▶ Ver
+          </button>
+
+          <button
+            class="favorite ${isFavorite ? "active" : ""}"
+            onclick="toggleFavorite(${movie.id})">
+
+            ${isFavorite ? "♥ En favoritos" : "♡ Añadir a favoritos"}
+
+          </button>
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+  }
+
+  function render() {
+    renderMovies(movies, moviesContainer);
+
+    const favoriteMovies =
+      movies.filter(movie => favorites.includes(movie.id));
+
+    renderMovies(favoriteMovies, favoritesContainer);
+  }
+
+  function toggleFavorite(id) {
+    if (favorites.includes(id)) {
+      favorites = favorites.filter(item => item !== id);
+    } else {
+      favorites.push(id);
+    }
+
+    localStorage.setItem(
+      "cinelibre_favorites",
+      JSON.stringify(favorites)
+    );
+
+    render();
+  }
+
+  function playMovie(id) {
+    const movie = movies.find(item => item.id === id);
+
+    alert(
+      "🎬 " + movie.title +
+      "\\n\\nEsta película es un ejemplo. " +
+      "Aquí conectaremos el reproductor con contenido legal."
+    );
+  }
+
+  search.addEventListener("input", () => {
+    const text = search.value.toLowerCase().trim();
+
+    const filtered = movies.filter(movie =>
+      movie.title.toLowerCase().includes(text) ||
+      movie.genre.toLowerCase().includes(text)
+    );
+
+    renderMovies(filtered, moviesContainer);
+  });
+
+  function showSection(sectionId) {
+    document
+      .querySelectorAll("main section")
+      .forEach(section => section.classList.add("hidden"));
+
+    document
+      .getElementById(sectionId)
+      .classList.remove("hidden");
+
+    document
+      .querySelectorAll("nav button")
+      .forEach(button => button.classList.remove("active"));
+
+    if (sectionId === "home") {
+      document.getElementById("homeBtn").classList.add("active");
+    }
+  }
+
+  document
+    .getElementById("videoInput")
+    .addEventListener("change", function() {
+
+      const file = this.files[0];
+
+      if (!file) return;
+
+      const url = URL.createObjectURL(file);
+
+      document.getElementById("videoContainer").innerHTML = `
+        <video controls playsinline>
+          <source src="${url}" type="${file.type}">
+          Tu navegador no puede reproducir este vídeo.
+        </video>
+
+        <p style="color:#a1a1aa;margin-top:8px;">
+          ${file.name}
+        </p>
+      `;
+    });
+
+  render();
+</script>
+
+</body>
+</html>
